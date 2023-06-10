@@ -1,5 +1,8 @@
-export type BookState = {
+export type StudentState = {
     id: string | any;
-    title: string | undefined;
-    author: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    email: string | undefined;
+    age: string | undefined;
+    grade:string | undefined;
   };

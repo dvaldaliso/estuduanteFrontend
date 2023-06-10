@@ -10,7 +10,7 @@ import {
   } from "@chakra-ui/react";
   import { useRef } from "react";
   
-  const DeleteBookModel = ({
+  const DeleteStudentModel = ({
     isOpen,
     onClose,
     handleDelete,
@@ -56,4 +56,4 @@ import {
     );
   };
   
-  export default DeleteBookModel;
+  export default DeleteStudentModel;

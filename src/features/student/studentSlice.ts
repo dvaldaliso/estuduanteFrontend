@@ -1,46 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { BookState } from "../../redux/types";
+import { StudentState } from "../../redux/types";
 
 type initialStateType = {
-  bookList: BookState[];
+  studentList: StudentState[];
 };
-const bookList: BookState[] =
+const studentList: StudentState[] =
   JSON.parse(localStorage.getItem("userData") as string) ?? [];
 
 const initialState: initialStateType = {
-  bookList,
+  studentList,
 };
 
-export const bookSlice = createSlice({
+export const studentSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    addNewBook: (state, action: PayloadAction<BookState>) => {
-      state.bookList?.push(action.payload);
+    addNewStudent: (state, action: PayloadAction<StudentState>) => {
+      state.studentList?.push(action.payload);
     },
-    updateBook: (state, action: PayloadAction<BookState>) => {
+    updateStudent: (state, action: PayloadAction<StudentState>) => {
       const {
-        payload: { title, id, author },
+        payload: { id, firstName, lastName, email, age,  grade },
       } = action;
 
-      state.bookList = state.bookList.map((book) =>
-        book.id === id ? { ...book, author, title } : book
+      state.studentList = state.studentList.map((student) =>
+      student.id === id ? { ...student,firstName, lastName, email, age,  grade } : student
       );
-      localStorage.setItem("userData", JSON.stringify(state.bookList));
+      localStorage.setItem("userData", JSON.stringify(state.studentList));
     },
-    deleteBook: (state, action: PayloadAction<{ id: string }>) => {
-      const newArr = state.bookList.filter(
+    deleteStudent: (state, action: PayloadAction<{ id: string }>) => {
+      const newArr = state.studentList.filter(
         (book) => book.id !== action.payload
       );
       localStorage.setItem("userData", JSON.stringify(newArr));
-      state.bookList = newArr;
+      state.studentList = newArr;
     },
   },
 });
 
-export const { addNewBook, updateBook, deleteBook } = bookSlice.actions;
+export const { addNewStudent, updateStudent, deleteStudent } = studentSlice.actions;
 
-export const selectBookList = (state: RootState) => state.book.bookList;
-export default bookSlice.reducer;
+export const selectBookList = (state: RootState) => state.student.studentList;
+export default studentSlice.reducer;

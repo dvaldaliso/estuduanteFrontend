@@ -30,15 +30,15 @@ import {
   AlertDialogFooter,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { addNewBook, updateBook, deleteBook } from "./studentSlice";
+import { addNewStudent, updateStudent, deleteStudent } from "./studentSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
-import DeleteBookModel from "./deleteStudentModel";
+import DeleteStudentModel from "./deleteStudentModel";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-const AddBook = () => {
+const AddStudent = () => {
   const modalAddButton = useDisclosure();
   const modalDeleteButton = useDisclosure();
   const modalErrorButton = useDisclosure();
@@ -49,29 +49,35 @@ const AddBook = () => {
   const finalRef = React.useRef(null);
   const dispatch = useAppDispatch();
 
-  const [title, setTitle] = useState<string | undefined>("");
-  const [author, setAuthor] = useState<string | undefined>("");
+  const [firstName, setFirstName] = useState<string | undefined>("");
+  const [lastName, setLastName] = useState<string | undefined>("");
+  const [email, setEmail] = useState<string | undefined>("");
+  const [age, setAge] = useState<string | undefined>("");
+  const [grade, setGrade] = useState<string | undefined>("");
   const [ids, setId] = useState<string | undefined>("");
   const [selectedId, setSelectedId] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const isError = title === "";
-  const isErrorAuthor = author === "";
+  const isError = firstName === "";
+  const isErrorAuthor = lastName === "";
 
   console.log(isError);
-  const bookList = useAppSelector((state) => state.book.bookList);
+  const studentList = useAppSelector((state) => state.student.studentList);
 
   const handleOnSubmit = () => {
     if (ids) {
       modalAddButton.onClose();
-      dispatch(updateBook({ author, title, id: ids }));
+      dispatch(updateStudent({ firstName, lastName,email,age,grade, id: ids }));
       clearInputs();
       return;
     } else {
-      if (title && author) {
+      if (firstName && lastName) {
         const userData = {
-          title,
-          author,
-          id: bookList.length,
+          firstName,
+          lastName,
+          email,
+          age,
+          grade,
+          id: studentList.length,
         };
         let oldData =
           JSON.parse(localStorage.getItem("userData") as string) || [];
@@ -80,7 +86,7 @@ const AddBook = () => {
           "userData",
           JSON.stringify([...oldData, userData])
         );
-        dispatch(addNewBook(userData));
+        dispatch(addNewStudent(userData));
         clearInputs();
         modalAddButton.onClose();
       } else {
@@ -101,23 +107,23 @@ const AddBook = () => {
     }
   };
 
-  const editData = (book: any) => {
+  const editData = (student: any) => {
     modalAddButton.onOpen();
-    setTitle(book.title);
-    setAuthor(book.author);
-    setId(book.id);
+    setFirstName(student.firstName);
+    setLastName(student.lastName);
+    setId(student.id);
     return;
   };
 
   const handleDelete = (id: any) => {
-    dispatch(deleteBook(id));
+    dispatch(deleteStudent(id));
     modalDeleteButton.onClose();
     clearInputs();
   };
 
   const clearInputs = () => {
-    setTitle("");
-    setAuthor("");
+    setFirstName("");
+    setLastName("");
     setId("");
   };
 
@@ -167,7 +173,7 @@ const AddBook = () => {
             fontWeight="bold"
             marginBottom={"5"}
           >
-            Book Details
+            Student Details
           </Text>
         </Box>
         <Box margin="20px">
@@ -196,24 +202,24 @@ const AddBook = () => {
                   <ModalCloseButton />
                   <ModalBody pb={6}>
                     <FormControl isRequired isInvalid={isError}>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel>First Name</FormLabel>
                       <Input
                         onKeyDown={(e) => something(e)}
                         ref={initialRef}
-                        value={title}
-                        placeholder="Enter Title"
-                        onChange={(e) => setTitle(e.currentTarget.value)}
+                        value={firstName}
+                        placeholder="Enter First Name"
+                        onChange={(e) => setFirstName(e.currentTarget.value)}
                       />
                     </FormControl>
 
                     <FormControl mt={4} isRequired isInvalid={isError}>
-                      <FormLabel>Author</FormLabel>
+                      <FormLabel>Last Name</FormLabel>
                       <Input
                         onKeyDown={(e) => something(e)}
-                        value={author}
-                        placeholder="Enter Author"
-                        blur={author}
-                        onChange={(e) => setAuthor(e.currentTarget.value)}
+                        value={lastName}
+                        placeholder="Enter Last name"
+                        blur={lastName}
+                        onChange={(e) => setLastName(e.currentTarget.value)}
                       />
                     </FormControl>
                   </ModalBody>
@@ -241,10 +247,10 @@ const AddBook = () => {
                 <Thead borderBlockEnd={"2px solid"}>
                   <Tr>
                     <Th textAlign={"center"} fontSize={"16"}>
-                      Title
+                      First Name
                     </Th>
                     <Th textAlign={"center"} fontSize={"16"}>
-                      Author
+                      Last Name
                     </Th>
                     <Th textAlign={"end"} fontSize={"16"}>
                       ACTIONS
@@ -252,13 +258,13 @@ const AddBook = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {bookList?.map((book) => (
-                    <Tr key={book.id}>
+                  {studentList?.map((student) => (
+                    <Tr key={student.id}>
                       <Td textAlign={"center"} fontSize={"16"}>
-                        {book.title}
+                        {student.firstName}
                       </Td>
                       <Td textAlign={"center"} fontSize={"16"}>
-                        {book.author}
+                        {student.lastName}
                       </Td>
                       <Td textAlign={"end"} fontSize={"16"}>
                         <IconButton
@@ -267,7 +273,7 @@ const AddBook = () => {
                           aria-label=""
                           icon={<EditIcon />}
                           marginRight="1rem"
-                          onClick={() => editData(book)}
+                          onClick={() => editData(student)}
                         />
                         <IconButton
                           color="#1a202c"
@@ -275,7 +281,7 @@ const AddBook = () => {
                           border={"1px solid"}
                           aria-label=""
                           icon={<DeleteIcon />}
-                          onClick={() => openDeleteAlert(book.id)}
+                          onClick={() => openDeleteAlert(student.id)}
                         />
                       </Td>
                     </Tr>
@@ -283,7 +289,7 @@ const AddBook = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <DeleteBookModel
+            <DeleteStudentModel
               isOpen={modalDeleteButton.isOpen}
               onClose={modalDeleteButton.onClose}
               handleDelete={handleDelete}
@@ -296,4 +302,4 @@ const AddBook = () => {
   );
 };
 
-export default AddBook;
+export default AddStudent;
