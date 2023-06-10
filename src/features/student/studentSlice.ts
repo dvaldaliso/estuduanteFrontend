@@ -19,49 +19,59 @@ reducers: {
         // TODO: Update state to clear success message
     }
 },
-extraReducers: {
-    [getStudents.pending.type]: (state, action) => {
+extraReducers(builder) {
+    builder
+      .addCase(getStudents.pending, (state, action) => {
         state.list.status = "pending"
         state.list.isLoading = true
-    },
-    [getStudents.fulfilled.type]: (state, { payload }) => {
+      })
+      .addCase(getStudents.fulfilled, (state, action) => {
         state.list.status = "success"
-        state.list.values = payload
+        state.list.values = action.payload
         state.list.isLoading = false
-    },
-    [getStudents.rejected.type]: (state, action) => {
+      })
+      .addCase(getStudents.rejected, (state, action) => {
         state.list.status = "failed"
         state.list.isLoading = false
-    },
-    [addStudent.pending.type]: (state, action) => {
+      })
+      .addCase(addStudent.pending, (state, action) => {
+        state.list.status = "pending"
         state.save.isSaving = true
-    },
-    [addStudent.fulfilled.type]: (state, action) => {
+      })
+      .addCase(addStudent.fulfilled, (state, action) => {
+        state.list.status = "success"
         state.save.isSaving = false
-    },
-    [addStudent.rejected.type]: (state, action) => {
+      })
+      .addCase(addStudent.rejected, (state, action) => {
+        state.list.status = "failed"
         state.save.isSaving = false
-    },
-    [updateStudent.pending.type]: (state, action) => {
+      })
+      .addCase(updateStudent.pending, (state, action) => {
+        state.list.status = "pending"
         state.save.isSaving = true
-    },
-    [updateStudent.fulfilled.type]: (state, action) => {
+      })
+      .addCase(updateStudent.fulfilled, (state, action) => {
+        state.list.status = "success"
         state.save.isSaving = false
-    },
-    [updateStudent.rejected.type]: (state, action) => {
+      })
+      .addCase(updateStudent.rejected, (state, action) => {
+        state.list.status = "failed"
         state.save.isSaving = false
-    },
-    [deleteStudent.pending.type]: (state, action) => {
+      })
+      .addCase(deleteStudent.pending, (state, action) => {
+        state.list.status = "pending"
         state.save.isDeleting = true
-    },
-    [deleteStudent.fulfilled.type]: (state, action) => {
+      })
+      .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.list.status = "success"
         state.save.isDeleting = false
-    },
-    [deleteStudent.rejected.type]: (state, action) => {
+      })
+      .addCase(deleteStudent.rejected, (state, action) => {
+        state.list.status = "failed"
         state.save.isDeleting = false
-    }
-}
-
+      })
+      
+  }
 });
 
 export default studentSlice.reducer;

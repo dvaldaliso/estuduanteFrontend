@@ -19,22 +19,22 @@ reducers: {
         // TODO: Update state to clear success message
     }
 },
-extraReducers: {
-    [getUsers.pending.type]: (state, action) => {
+extraReducers(builder) {
+    builder
+      .addCase(getUsers.pending, (state, action) => {
         state.list.status = "pending"
         state.list.isLoading = true
-    },
-    [getUsers.fulfilled.type]: (state, { payload }) => {
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
         state.list.status = "success"
-        state.list.values = payload
+        state.list.values = action.payload
         state.list.isLoading = false
-    },
-    [getUsers.rejected.type]: (state, action) => {
+      })
+      .addCase(getUsers.rejected, (state, action) => {
         state.list.status = "failed"
         state.list.isLoading = false
-    },
-    
-}
+      })
+  }
 
 });
 

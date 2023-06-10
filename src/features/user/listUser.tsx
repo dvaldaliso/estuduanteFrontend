@@ -21,13 +21,14 @@ import {
   TableContainer,
   Flex,
   IconButton,
-  Input
+  Input,
+  Icon
 
 } from "@chakra-ui/react";
 import {  getUsers } from "../../services/user";
+import { MdAddCircleOutline, MdDelete, MdModeEdit, MdRemoveCircleOutline } from 'react-icons/md'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
-
 
 import { IUser } from "../../model/user";
 
@@ -61,80 +62,66 @@ const ListUser = () => {
         my="4"
         ml="auto"
         colorScheme="green"
-       
       >
         Tema {"Dark"}
       </Button>
-
-      <Box
+      <Card
         flex="1"
         p="4"
         bg={"white"}
         borderRadius="md"
+        
       >
-        <Heading
-          py="2"
-          fontSize={["sm", "lg", "xl"]}
-          fontWeight="black"
-          color={"gray.600"}
-        >
-          Gerenciador de Usuários
-        </Heading>
-
+      <CardHeader background={"#3E597D"}>
         <Flex
           justify="space-between"
           align="center"
           py="2"
         >
-          <Flex
-            flex="1"
-            direction="row"
-            align="center"
-            border="1px"
-            borderRadius="md"
-            borderColor={ "gray.600"}
-           >
-            <IconButton
-              size="sm"
-              borderRadius="0"
-              aria-label="pesquisar-usuario"
-             
-            />
-
-            <Input
-              size="sm"
-              border="0"
-              focusBorderColor="green.500"
-              placeholder="Pesquisar..."
-            />
-          </Flex>
-
+        <Heading
+          py="2"
+          fontSize={["sm", "lg", "xl"]}
+          fontWeight="black"
+          color={"white"}
+          >
+          Gestionar Usario
+        </Heading>
+         <Box>
+          <Button
+            
+            ml="4"
+            size="sm"
+            fontSize="sm"
+            colorScheme="red"
+            leftIcon={<Icon as={MdRemoveCircleOutline} boxSize={5}/>}
+            title="Eliminar"
+          >
+            {<Text>Eliminar</Text>}
+          </Button>
           <Button
             
             ml="4"
             size="sm"
             fontSize="sm"
             colorScheme="green"
-           
-            title="Cadastrar Usuário"
+            leftIcon={<Icon as={MdAddCircleOutline} boxSize={5}/>}
+            title="Nuevo Usuario"
           >
-            {<Text>Novo Usuário</Text>}
+            {<Text>Nuevo Usuario</Text>}
           </Button>
-
-        
+         </Box>
         </Flex>
-
-        <Box
-          border="1px"
-          borderRadius="sm"
-          borderColor={"gray.600"}
-        >
-          <Table size="sm">
+      </CardHeader>
+      <CardBody
+         border="1px"
+         borderRadius="sm"
+         borderColor={"gray.600"}>
+        <Table size="sm">
             <Thead bg={ "light" }>
               <Tr>
                 <Th>Nome</Th>
                 <Th>E-mail</Th>
-                <Th>Data de Cadastro</Th>
+                <Th>Actions</Th>
                 <Th width="8"></Th>
                 <Th width="8"></Th>
               </Tr>
@@ -148,82 +135,29 @@ const ListUser = () => {
               <Td textAlign={"center"} fontSize={"16"}>
                 {user.body}
               </Td>
+              <Td textAlign={"end"} fontSize={"16"}>
+                <Icon as={MdModeEdit}
+                  color="yellow"
+                  boxSize={5}
+                  aria-label=""
+                  marginRight="1rem"
+                />
+                       
+                <Icon as={MdDelete}
+                  color="red"
+                  boxSize={5}
+                  aria-label=""
+                  onClick={()=>{alert("asds")}}
+                />
+              </Td>
             </Tr>
           ))}
             </Tbody>
-          </Table>
-        </Box>
-      </Box>
+        </Table>
+      </CardBody>
+      <CardFooter>Paginacion</CardFooter>
+      </Card>
     </Flex>
-/* <Box>
-<Box w="100%">
-<Box marginTop={"20px"} textAlign={"center"}>
-  <Text
-    fontSize={"25"}
-    textDecoration={"underline"}
-    textDecorationColor={"gray"}
-    textDecorationThickness={"4px"}
-    fontWeight="bold"
-    marginBottom={"5"}
-  >
-    Student Details
-  </Text>
-</Box>
-{isLoadingTable && (
-        <div className="has-text-centered">Fetching...</div>
-      )}
-<Box margin="20px">
-  <Box
-    display={"flex"}
-    flexDirection="column"
-    justifyItems={"flex-start"}
-    px="15px"
-    py="15px"
-    w="100%"
-  >
-    <TableContainer
-      w="100%"
-      display="block"
-      height="550px"
-      overflowY="auto"
-    >
-      <Table
-        borderBlock={"2px solid"}
-        variant="striped"
-        colorScheme="teal"
-      >
-        <Thead borderBlockEnd={"2px solid"}>
-          <Tr>
-            <Th textAlign={"center"} fontSize={"16"}>
-              First Name
-            </Th>
-            <Th textAlign={"center"} fontSize={"16"}>
-              Last Name
-            </Th>
-            <Th textAlign={"end"} fontSize={"16"}>
-              ACTIONS
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {userList?.map((user: IUser) => (
-            <Tr key={user.id}>
-              <Td textAlign={"center"} fontSize={"16"}>
-                {user.title}
-              </Td>
-              <Td textAlign={"center"} fontSize={"16"}>
-                {user.body}
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
-   
-  </Box>
-</Box>
-</Box>
-</Box> */
   );
 };
 
