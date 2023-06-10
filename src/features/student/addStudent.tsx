@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -30,16 +30,19 @@ import {
   AlertDialogFooter,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import { addNewStudent, updateStudent, deleteStudent } from "./studentSlice";
+import { addStudent, deleteStudent, getStudents, updateStudent } from "../../services/student";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import { nanoid } from '@reduxjs/toolkit'
 import DeleteStudentModel from "./deleteStudentModel";
+import { IStudent } from "../../model/stundent";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const AddStudent = () => {
+  const dispatch = useAppDispatch();
+
   const modalAddButton = useDisclosure();
   const modalDeleteButton = useDisclosure();
   const modalErrorButton = useDisclosure();
@@ -48,53 +51,66 @@ const AddStudent = () => {
 
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
-  const dispatch = useAppDispatch();
 
-  const [firstName, setFirstName] = useState<string | undefined>("");
-  const [lastName, setLastName] = useState<string | undefined>("");
-  const [email, setEmail] = useState<string | undefined>("");
-  const [age, setAge] = useState<string | undefined>("");
-  const [grade, setGrade] = useState<string | undefined>("");
-  const [ids, setId] = useState<string | undefined>("");
   const [selectedId, setSelectedId] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const isError = firstName === "";
-  const isErrorAuthor = lastName === "";
 
-  console.log(isError);
-  const studentList = useAppSelector((state) => state.student.studentList);
+  useEffect(() => {
+    dispatch(getStudents());
+  }, [dispatch]);
 
-  const handleOnSubmit = () => {
-    if (ids!=="") {
-      modalAddButton.onClose();
-      dispatch(updateStudent({ firstName, lastName,email,age,grade, id: ids }));
-      clearInputs();
+  const studentList = useAppSelector((state) => state.student.list.values);
+
+  const isLoadingTable = useSelector(
+    (state: RootState) => state.student.list.isLoading
+  );
+  const isSaving = useSelector(
+    (state: RootState) => state.student.save.isSaving
+  );
+  const isDeleting = useSelector(
+    (state: RootState) => state.student.save.isDeleting
+  );
+
+  const [student, setStudent] = useState<IStudent>({
+    id: 0,
+    firstName: "",
+    lastName: "",
+    age: 0,
+    email:"",
+    grade:"",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked } = e.target;
+    setStudent((prevState) => ({
+      ...prevState
+    }));
+  };
+
+
+  const OnSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    if (student.firstName === "") {
+      setShowAlert(true);
       return;
-    } else {
-      if (firstName && lastName) {
-        const userData = {
-          firstName,
-          lastName,
-          email,
-          age,
-          grade,
-          id: nanoid(),
-        };
-        let oldData =
-          JSON.parse(localStorage.getItem("userData") as string) || [];
-
-        localStorage.setItem(
-          "userData",
-          JSON.stringify([...oldData, userData])
-        );
-        dispatch(addNewStudent(userData));
-        clearInputs();
-        modalAddButton.onClose();
-      } else {
-        modalErrorButton.onOpen();
-        setShowAlert(true);
-      }
     }
+
+    const action =
+    student.id === 0
+        ? addStudent(student)
+        : updateStudent(student);
+
+    dispatch(action)
+      .unwrap()
+      .then((response) => {
+        //toast.success(response);
+        resetForm();
+        dispatch(getStudents());
+      })
+      .catch((error) => {
+        //toast.error(error);
+      });
   };
 
   const openDeleteAlert = (id: any) => {
@@ -104,33 +120,39 @@ const AddStudent = () => {
 
   const something = (event: any) => {
     if (event.keyCode === 13) {
-      handleOnSubmit();
+      //handleOnSubmit();
     }
   };
 
   const editData = (student: any) => {
     modalAddButton.onOpen();
-    setFirstName(student.firstName);
+    /*setFirstName(student.firstName);
     setLastName(student.lastName);
-    setId(student.id);
+    setId(student.id);*/
     return;
   };
 
   const handleDelete = (id: any) => {
     dispatch(deleteStudent(id));
     modalDeleteButton.onClose();
-    clearInputs();
+    resetForm();
   };
 
-  const clearInputs = () => {
-    setFirstName("");
-    setLastName("");
-    setId("");
+  const resetForm = () => {
+    setStudent({
+      id: 0,
+      firstName: "",
+      lastName: "",
+      age: 0,
+      email:"",
+      grade:"",
+    });
+    setShowAlert(false);
   };
 
   const onCancel = () => {
     modalAddButton.onClose();
-    clearInputs();
+    resetForm();
   };
 
   return (
@@ -202,31 +224,35 @@ const AddStudent = () => {
                   <ModalHeader>Enter Your Details</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody pb={6}>
-                    <FormControl isRequired isInvalid={isError}>
+                    <FormControl isRequired isInvalid={student.firstName===""}>
                       <FormLabel>First Name</FormLabel>
                       <Input
                         onKeyDown={(e) => something(e)}
                         ref={initialRef}
-                        value={firstName}
+                        value={student.firstName}
                         placeholder="Enter First Name"
-                        onChange={(e) => setFirstName(e.currentTarget.value)}
+                        onChange={handleInputChange}
                       />
                     </FormControl>
 
-                    <FormControl mt={4} isRequired isInvalid={isError}>
+                    <FormControl mt={4} isRequired isInvalid={student.lastName===""}>
                       <FormLabel>Last Name</FormLabel>
                       <Input
                         onKeyDown={(e) => something(e)}
-                        value={lastName}
+                        value={student.lastName}
                         placeholder="Enter Last name"
-                        blur={lastName}
-                        onChange={(e) => setLastName(e.currentTarget.value)}
+                        blur={student.lastName}
+                        onChange={handleInputChange}
                       />
                     </FormControl>
                   </ModalBody>
 
                   <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={handleOnSubmit}>
+                    <Button 
+                    colorScheme="blue" 
+                    mr={3}
+                    loadingText={isSaving}
+                    onClick={OnSubmit}>
                       Save
                     </Button>
                     <Button onClick={onCancel}>Cancel</Button>
@@ -259,7 +285,7 @@ const AddStudent = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {studentList?.map((student) => (
+                  {studentList?.map((student: IStudent) => (
                     <Tr key={student.id}>
                       <Td textAlign={"center"} fontSize={"16"}>
                         {student.firstName}

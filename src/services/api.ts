@@ -1,10 +1,9 @@
-import Axios from 'axios'
+import axios from 'axios'
 import initInterceptors from './interceptors';
-const baseUrl = `${process.env.SERVER_ENDPOINT}/api/`;
-const API_BASE_URL = process.env.SERVER_ENDPOINT;
+//const baseUrl = `${process.env.REACT_APP_API_URL}/api/`;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-
-const api = Axios.create({ 
+const api = axios.create({ 
     baseURL: API_BASE_URL,  
     headers: {
     "Content-type": "application/json"

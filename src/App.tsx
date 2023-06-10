@@ -3,6 +3,7 @@ import Navbar from "./components/NavBar";
 import { Loader } from "./components/Loader";
 
 import AddBook from "./features/student/addStudent";
+import ListUser from "./features/user/listUser";
 
 const App = () => {
   return (
@@ -11,7 +12,7 @@ const App = () => {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<AddBook />} />
+          <Route path="/" element={<ListUser />} />
         </Routes>
       </Router>
     </>
