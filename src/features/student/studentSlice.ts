@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction  } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
-import type { PayloadAction } from "@reduxjs/toolkit";
 import { StudentState } from "../../redux/types";
 
 type initialStateType = {
@@ -14,7 +13,7 @@ const initialState: initialStateType = {
 };
 
 export const studentSlice = createSlice({
-  name: "counter",
+  name: "student",
   initialState,
   reducers: {
     addNewStudent: (state, action: PayloadAction<StudentState>) => {
@@ -24,15 +23,17 @@ export const studentSlice = createSlice({
       const {
         payload: { id, firstName, lastName, email, age,  grade },
       } = action;
+      console.log(id, firstName, lastName)
 
       state.studentList = state.studentList.map((student) =>
-      student.id === id ? { ...student,firstName, lastName, email, age,  grade } : student
+      student.id === id ? { ...student, firstName, lastName, email, age,  grade } : student
       );
+      console.log(state.studentList)
       localStorage.setItem("userData", JSON.stringify(state.studentList));
     },
     deleteStudent: (state, action: PayloadAction<{ id: string }>) => {
       const newArr = state.studentList.filter(
-        (book) => book.id !== action.payload
+        (student) => student.id !== action.payload
       );
       localStorage.setItem("userData", JSON.stringify(newArr));
       state.studentList = newArr;

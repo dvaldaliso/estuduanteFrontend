@@ -33,6 +33,7 @@ import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { addNewStudent, updateStudent, deleteStudent } from "./studentSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
+import { nanoid } from '@reduxjs/toolkit'
 import DeleteStudentModel from "./deleteStudentModel";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -64,7 +65,7 @@ const AddStudent = () => {
   const studentList = useAppSelector((state) => state.student.studentList);
 
   const handleOnSubmit = () => {
-    if (ids) {
+    if (ids!=="") {
       modalAddButton.onClose();
       dispatch(updateStudent({ firstName, lastName,email,age,grade, id: ids }));
       clearInputs();
@@ -77,7 +78,7 @@ const AddStudent = () => {
           email,
           age,
           grade,
-          id: studentList.length,
+          id: nanoid(),
         };
         let oldData =
           JSON.parse(localStorage.getItem("userData") as string) || [];
