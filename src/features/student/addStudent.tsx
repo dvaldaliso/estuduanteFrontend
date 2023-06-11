@@ -79,11 +79,8 @@ const AddStudent = () => {
     grade:"",
   }  
   const [student, setStudent] = useState<IStudent>(studentdata);
-  const [firstName, setfirstName] = useState("");
-  
 
-  const handleInputChange = (e: any) => {
-
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStudent({ ...student, [e.target.name]: e.target.value });
    
   };
@@ -234,7 +231,7 @@ const AddStudent = () => {
                       <Input
                         onKeyDown={(e) => something(e)}
                         ref={initialRef}
-                        value={firstName}
+                        value={student.firstName}
                         placeholder="Enter First Name"
                         onChange={handleInputChange}
                       />
@@ -246,7 +243,7 @@ const AddStudent = () => {
                         onKeyDown={(e) => something(e)}
                         value={student.lastName}
                         placeholder="Enter Last name"
-                        blur={studentdata.lastName}
+                        blur={student.lastName}
                         onChange={handleInputChange}
                       />
                     </FormControl>
