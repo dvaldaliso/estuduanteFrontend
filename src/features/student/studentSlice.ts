@@ -16,7 +16,6 @@ export const studentSlice = createSlice({
 },
 reducers: {
     clearSuccessMessage: (state, payload) => {
-        // TODO: Update state to clear success message
     }
 },
 extraReducers(builder) {
