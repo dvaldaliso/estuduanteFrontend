@@ -70,21 +70,26 @@ const AddStudent = () => {
   const isDeleting = useSelector(
     (state: RootState) => state.student.save.isDeleting
   );
-
-  const [student, setStudent] = useState<IStudent>({
+  let studentdata :IStudent={
     id: 0,
     firstName: "",
     lastName: "",
     age: 0,
     email:"",
     grade:"",
-  });
+  }  
+  const [student, setStudent] = useState<IStudent>(studentdata);
+  const [firstName, setfirstName] = useState("");
+  
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, checked } = e.target;
-    setStudent((prevState) => ({
-      ...prevState
-    }));
+  const handleInputChange = (e: any) => {
+
+    setStudent({ ...student, [e.target.name]: e.target.value });
+   
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStudent({ ...student, [e.target.name]: e.target.value });
   };
 
 
@@ -229,7 +234,7 @@ const AddStudent = () => {
                       <Input
                         onKeyDown={(e) => something(e)}
                         ref={initialRef}
-                        value={student.firstName}
+                        value={firstName}
                         placeholder="Enter First Name"
                         onChange={handleInputChange}
                       />
@@ -241,7 +246,7 @@ const AddStudent = () => {
                         onKeyDown={(e) => something(e)}
                         value={student.lastName}
                         placeholder="Enter Last name"
-                        blur={student.lastName}
+                        blur={studentdata.lastName}
                         onChange={handleInputChange}
                       />
                     </FormControl>

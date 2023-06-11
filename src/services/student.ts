@@ -4,7 +4,7 @@ import { IStudent } from "../model/stundent";
 
 export const getStudents = createAsyncThunk("student/getStudents", async () => {
     try {
-        const response = await API.get("student")
+        const response = await API.get("estudiante")
         return response.data
     } catch (error) {
         console.log(error)
@@ -13,7 +13,7 @@ export const getStudents = createAsyncThunk("student/getStudents", async () => {
 
 export const addStudent = createAsyncThunk("student/addStudent", async (student: IStudent) => {
     try {
-        const response = await API.post("student", student)
+        const response = await API.post("estudiante", student)
         return response.data
     } catch (error) {
         console.log(error)
@@ -23,7 +23,7 @@ export const addStudent = createAsyncThunk("student/addStudent", async (student:
 export const updateStudent = createAsyncThunk("student/updateStudent",
     async (student: IStudent) => {
         try {
-            const response = await API.put(`student/${student.id}`, student);
+            const response = await API.patch(`estudiante/${student.id}`, student);
             return response.data
         } catch (error) {
             console.log(error)
@@ -32,7 +32,7 @@ export const updateStudent = createAsyncThunk("student/updateStudent",
 
 export const deleteStudent = createAsyncThunk("student/deleteStudent", async (studentId: number) => {
     try {
-        const response = await API.delete(`student/${studentId}`)
+        const response = await API.delete(`estudiante/${studentId}`)
         return response.data
     } catch (error) {
         console.log(error)
