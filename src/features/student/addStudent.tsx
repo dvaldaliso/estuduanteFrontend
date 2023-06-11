@@ -9,40 +9,42 @@ import {
   ModalCloseButton,
   FormControl,
   useDisclosure,
+ Box,
+ Text,
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  CardFooter,
   FormLabel,
-  Input,
-  Box,
   Button,
-  Text,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  TableContainer,
+  Flex,
   IconButton,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
+  Input,
+  Icon
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useToast } from '@chakra-ui/react'
 import { addStudent, deleteStudent, getStudents, updateStudent } from "../../services/student";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import DeleteStudentModel from "./deleteStudentModel";
 import { IStudent } from "../../model/stundent";
 import { useForm } from "react-hook-form";
+import { MdAddCircleOutline, MdDelete, MdModeEdit, MdRemoveCircleOutline } from 'react-icons/md'
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const AddStudent = () => {
   const dispatch = useAppDispatch();
-  
+  const toast = useToast()
 
   const modalAddButton = useDisclosure();
   const modalDeleteButton = useDisclosure();
@@ -116,12 +118,11 @@ const AddStudent = () => {
     dispatch(action)
       .unwrap()
       .then((response: any) => {
-        //toast.success(response);
         reset();
         dispatch(getStudents());
       })
       .catch((error: any) => {
-        //toast.error(error);
+        
       });
       modalAddButton.onClose();
   };
@@ -163,63 +164,143 @@ const AddStudent = () => {
   };
 
   return (
-    <Box>
-      <Box>
-        {showAlert && (
-          <AlertDialog
-            isOpen={modalErrorButton.isOpen}
-            leastDestructiveRef={cancelRefError}
-            onClose={modalErrorButton.onClose}
-          >
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                  Alert
-                </AlertDialogHeader>
-
-                <AlertDialogBody>Please Fill All Required Data</AlertDialogBody>
-
-                <AlertDialogFooter>
-                  <Button
-                    colorScheme="red"
-                    onClick={modalErrorButton.onClose}
-                    ml={3}
-                  >
-                    Ok
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
-          </AlertDialog>
-        )}
-      </Box>
-      <Box w="100%">
-        <Box marginTop={"20px"} textAlign={"center"}>
-          <Text
-            fontSize={"25"}
-            textDecoration={"underline"}
-            textDecorationColor={"gray"}
-            textDecorationThickness={"4px"}
-            fontWeight="bold"
-            marginBottom={"5"}
-          >
-            Student Details
-          </Text>
-        </Box>
-        <Box margin="20px">
-          <Box
-            display={"flex"}
-            flexDirection="column"
-            justifyItems={"flex-start"}
-            px="15px"
-            py="15px"
-            w="100%"
-          >
-            <Box textAlign={"end"} marginBottom={"5"}>
-              <Button onClick={modalAddButton.onOpen} colorScheme="green">
-                ADD
-              </Button>
-              <Modal
+    <Flex
+    w="100%"
+    maxWidth={1220}
+    mx="auto"
+    px="6"
+    my="6"
+    direction="column"
+  >
+    <Card
+      flex="1"
+      p="4"
+      bg={"white"}
+      borderRadius="md"
+      
+    >
+    <CardHeader background={"#3E597D"}>
+      <Flex
+        justify="space-between"
+        align="center"
+        py="2"
+      >
+      <Heading
+        py="2"
+        fontSize={["sm", "lg", "xl"]}
+        fontWeight="black"
+        color={"white"}
+        >
+        Gestionar Usuario
+      </Heading>
+       <Box>
+        <Button
+          
+          ml="4"
+          size="sm"
+          fontSize="sm"
+          colorScheme="red"
+          leftIcon={<Icon as={MdRemoveCircleOutline} boxSize={5}/>}
+          title="Eliminar"
+        >
+          {<Text>Eliminar</Text>}
+        </Button>
+        <Button
+          
+          ml="4"
+          size="sm"
+          fontSize="sm"
+          colorScheme="green"
+          leftIcon={<Icon as={MdAddCircleOutline} boxSize={5}/>}
+          onClick={modalAddButton.onOpen}
+          title="Nuevo Usuario"
+        >
+          {<Text>Nuevo Usuario</Text>}
+        </Button>
+       </Box>
+      </Flex>
+    </CardHeader>
+    <CardBody
+       border="1px"
+       borderRadius="sm"
+       borderColor={"gray.600"}>
+        <Table
+                borderBlock={"2px solid"}
+                variant="striped"
+                colorScheme="teal"
+              >
+                <Thead borderBlockEnd={"2px solid"}>
+                  <Tr>
+                    <Th textAlign={"center"} fontSize={"16"}>
+                      First Name
+                    </Th>
+                    <Th textAlign={"center"} fontSize={"16"}>
+                      Last Name
+                    </Th>
+                    <Th textAlign={"center"} fontSize={"16"}>
+                    Age
+                    </Th>
+                    <Th textAlign={"center"} fontSize={"16"}>
+                    Gmail
+                    </Th>
+                    <Th textAlign={"center"} fontSize={"16"}>
+                      Grado
+                    </Th>
+                    <Th textAlign={"end"} fontSize={"16"}>
+                      ACTIONS
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {studentList?.map((student: IStudent) => (
+                    <Tr key={student.id}>
+                      <Td textAlign={"center"} fontSize={"16"}>
+                        {student.firstName}
+                      </Td>
+                      <Td textAlign={"center"} fontSize={"16"}>
+                        {student.lastName}
+                      </Td>
+                      <Td textAlign={"center"} fontSize={"16"}>
+                        {student.age}
+                      </Td>
+                      <Td textAlign={"center"} fontSize={"16"}>
+                        {student.email}
+                      </Td>
+                      <Td textAlign={"center"} fontSize={"16"}>
+                        {student.grade}
+                      </Td>
+                      <Td textAlign={"end"} fontSize={"16"}>
+                        <Icon as={MdModeEdit}
+                          color="yellow"
+                          boxSize={5}
+                          aria-label=""
+                          marginRight="1rem"
+                          onClick={() => editData(student)}
+                        />
+                              
+                        <Icon as={MdDelete}
+                          color="red"
+                          boxSize={5}
+                          aria-label=""
+                          onClick={() => openDeleteAlert(student.id)}
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+        </Table>
+    </CardBody>
+    <CardFooter>
+    </CardFooter>
+    </Card>
+    <DeleteStudentModel
+        isOpen={modalDeleteButton.isOpen}
+        onClose={modalDeleteButton.onClose}
+        handleDelete={handleDelete}
+        selectedId={selectedId}
+        />
+    <Box textAlign={"end"} marginBottom={"5"}>
+       <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}
                 isOpen={modalAddButton.isOpen}
@@ -257,6 +338,39 @@ const AddStudent = () => {
                         onChange={(e) => handleInputChange(e)}
                       />
                     </FormControl>
+                    <FormControl >
+                      <FormLabel>Age</FormLabel>
+                      <Input
+                      type="text"
+                      placeholder="Age"
+                      {...register("age", {
+                        required: "Please enter first name",
+                      })}
+                        onChange={(e) => handleInputChange(e)}
+                      />
+                    </FormControl>
+
+                    <FormControl mt={4} isRequired isInvalid={student.lastName===""}>
+                      <FormLabel>Email</FormLabel>
+                      <Input
+                      type="text"
+                        placeholder="Enter email"
+                        {...register("email", {
+                          minLength: 3,
+                          maxLength: 80
+                        })}
+                        onChange={(e) => handleInputChange(e)}
+                      />
+                    </FormControl>
+                    <FormControl mt={4} isRequired isInvalid={student.lastName===""}>
+                      <FormLabel>Grade</FormLabel>
+                      <Input
+                      type="text"
+                        placeholder="Enter Grade"
+                        {...register("grade")}
+                        onChange={(e) => handleInputChange(e)}
+                      />
+                    </FormControl>
                   </ModalBody>
 
                   <ModalFooter>
@@ -270,74 +384,9 @@ const AddStudent = () => {
                     <Button onClick={onCancel}>Cancel</Button>
                   </ModalFooter>
                 </ModalContent>
-              </Modal>
-            </Box>
-            <TableContainer
-              w="100%"
-              display="block"
-              height="550px"
-              overflowY="auto"
-            >
-              <Table
-                borderBlock={"2px solid"}
-                variant="striped"
-                colorScheme="teal"
-              >
-                <Thead borderBlockEnd={"2px solid"}>
-                  <Tr>
-                    <Th textAlign={"center"} fontSize={"16"}>
-                      First Name
-                    </Th>
-                    <Th textAlign={"center"} fontSize={"16"}>
-                      Last Name
-                    </Th>
-                    <Th textAlign={"end"} fontSize={"16"}>
-                      ACTIONS
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {studentList?.map((student: IStudent) => (
-                    <Tr key={student.id}>
-                      <Td textAlign={"center"} fontSize={"16"}>
-                        {student.firstName}
-                      </Td>
-                      <Td textAlign={"center"} fontSize={"16"}>
-                        {student.lastName}
-                      </Td>
-                      <Td textAlign={"end"} fontSize={"16"}>
-                        <IconButton
-                          color="#fff"
-                          backgroundColor={"blackAlpha.600"}
-                          aria-label=""
-                          icon={<EditIcon />}
-                          marginRight="1rem"
-                          onClick={() => editData(student)}
-                        />
-                        <IconButton
-                          color="#1a202c"
-                          backgroundColor={"whitesmoke"}
-                          border={"1px solid"}
-                          aria-label=""
-                          icon={<DeleteIcon />}
-                          onClick={() => openDeleteAlert(student.id)}
-                        />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-            <DeleteStudentModel
-              isOpen={modalDeleteButton.isOpen}
-              onClose={modalDeleteButton.onClose}
-              handleDelete={handleDelete}
-              selectedId={selectedId}
-            />
-          </Box>
-        </Box>
-      </Box>
+       </Modal>
     </Box>
+  </Flex>
   );
 };
 

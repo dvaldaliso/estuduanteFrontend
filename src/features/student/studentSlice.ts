@@ -62,6 +62,7 @@ extraReducers(builder) {
         state.save.isDeleting = true
       })
       .addCase(deleteStudent.fulfilled, (state, action) => {
+        state.list.values = action.payload
         state.list.status = "success"
         state.save.isDeleting = false
       })
