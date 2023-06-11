@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   Box,
   Text,
@@ -31,13 +31,15 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 
 import { IUser } from "../../model/user";
+import Pagination from "../../components/pagination/Pagination";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const ListUser = () => {
   const dispatch = useAppDispatch();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const lastPage = 20;
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
@@ -155,7 +157,15 @@ const ListUser = () => {
             </Tbody>
         </Table>
       </CardBody>
-      <CardFooter>Paginacion</CardFooter>
+      <CardFooter>
+        
+      <Pagination
+        currentPage={currentPage}
+        lastPage={lastPage}
+        maxLength={7}
+        setCurrentPage={setCurrentPage}
+      />
+      </CardFooter>
       </Card>
     </Flex>
   );

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/NavBar";
 import { Loader } from "./components/Loader";
 
-import AddBook from "./features/student/addStudent";
+import AddStudent from "./features/student/addStudent";
 import ListUser from "./features/user/listUser";
 
 const App = () => {
@@ -13,6 +13,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<ListUser />} />
+          <Route path="/student" element={<AddStudent />} />
         </Routes>
       </Router>
     </>
